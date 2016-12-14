@@ -125,9 +125,8 @@ class Slack extends EventEmitter {
 
     // regex matches
     let json = payload.toString();
-    events.eventNames.forEach(e => {
-      let regex = new RegExp(e, 'i');
-      if (regex.test(json)) events.push(e);
+    events.eventNames.forEach(exp => {
+      if (exp instanceof RegExp && exp.test(json)) events.push(e);
     });
 
     // trigger all events
