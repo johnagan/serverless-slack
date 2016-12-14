@@ -41,7 +41,7 @@ class Client {
   get channel() {
     if (this.payload) {
       if (this.payload.channel_id) return this.payload.channel_id;
-      else if (this.payload.channel) return this.payload.channel;
+      else if (this.payload.channel) return this.payload.channel.id;
       else if (this.payload.event && this.payload.event.channel) return this.payload.event.channel;
     }
   }
