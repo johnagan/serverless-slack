@@ -123,6 +123,13 @@ class Slack extends EventEmitter {
     // notify message button triggered by callback_id
     if (payload.callback_id) events.push('interactive_message', payload.callback_id);
 
+    // regex matches
+    let json = payload.toString();
+    events.eventNames.forEach(e => {
+      let regex = new RegExp(e, 'i');
+      if (regex.test(json)) events.push(e);
+    });
+
     // trigger all events
     events.forEach(name => this.emit(name, payload, bot, this.store));
   }
