@@ -125,4 +125,4 @@ class Slack extends EventEmitter {
 
 }
 
-module.exports = Slack;
+module.exports = new Slack();
