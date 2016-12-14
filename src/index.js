@@ -85,9 +85,6 @@ class Slack extends EventEmitter {
     if (token && token !== payload.token)
       return context.fail("[401] Unauthorized");
 
-    if (this.ignoreBots && (payload.event || payload).bot_id) return;
-
-
     // Events API challenge
     if (payload.challenge)
       return callback(null, payload.challenge);
