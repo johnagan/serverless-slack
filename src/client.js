@@ -66,8 +66,13 @@ class Client {
    * @return {Promise} A promise with the API response
    */
   reply(message, ephemeral) {
-    if (this.response_url) {
-      if (!ephemeral) message.response_type = 'in_channel';
+    if (this.response_url || ephemeral) {
+      if (!this.response_url) 
+        return Promise.reject("Message can't be ephemeral");
+      
+      if (!ephemeral) 
+        message.response_type = 'in_channel';
+      
       return this.send(this.response_url, message);
     } else {
       return this.say(message);
