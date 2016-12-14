@@ -123,20 +123,6 @@ class Slack extends EventEmitter {
     events.forEach(name => this.emit(name, payload, bot, this.store));
   }
 
-
-  /**
-   * Event handler for incoming messages
-   *
-   * @param {mixed} names - Any number of event names to listen to. The last will be the callback
-   * @return {Slack} The Slack adapter
-   */
-  on(...names) {
-    let callback = names.pop(); // support multiple events per callback
-    names.forEach(name => super.on(name, callback));
-
-    return this; // chaining support
-  }
-
 }
 
 module.exports = Slack;
