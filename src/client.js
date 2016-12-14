@@ -70,7 +70,6 @@ class Client {
       if (!ephemeral) message.response_type = 'in_channel';
       return this.send(this.response_url, message);
     } else {
-      message.channel = this.channel;
       return this.say(message);
     }
   }
@@ -100,6 +99,9 @@ class Client {
 
     // set the bot or user token if unset
     if (!message.token && this.token) message.token = this.token;
+
+    // set the channel if unset
+    if (!message.channel && this.channel) message.channel = this.channel;
 
     // convert json except when passing in a url
     if (!endPoint.match(/^http/i)) message = qs.stringify(message);
