@@ -8,6 +8,7 @@ class Slack extends EventEmitter {
   
   constructor(options) {
     super();
+    this.ignoreBots = true; // ignore other bot message
     this.store = require('./dynamo'); // default
   }
 
@@ -73,7 +74,7 @@ class Slack extends EventEmitter {
     let payload = event.body;
     let id = payload.team_id;
     let token = process.env.VERIFICATION_TOKEN;
-    
+
     // Interactive Messages
     if (payload.payload) {
       payload = JSON.parse(payload.payload);
@@ -84,9 +85,15 @@ class Slack extends EventEmitter {
     if (token && token !== payload.token)
       return context.fail("[401] Unauthorized");
 
+    if (this.ignoreBots && (payload.event || payload).bot_id) return;
+
+
     // Events API challenge
     if (payload.challenge)
       return callback(null, payload.challenge);
+    // Ignore Bot Messages
+    else if (this.ignoreBots && (payload.event || payload).bot_id)
+      return callback();
     else
       callback();
 
