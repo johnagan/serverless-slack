@@ -88,14 +88,14 @@ class Slack extends EventEmitter {
     // Events API challenge
     if (payload.challenge)
       return callback(null, payload.challenge);
-    // Ignore Bot Messages
-    else if (this.ignoreBots && (payload.event || payload).bot_id)
-      return callback();
     else
       callback();
 
-    // Load Auth And Trigger Events
-    this.store.get(id).then(this.notify.bind(this, payload));
+    // Ignore Bot Messages
+    if (!this.ignoreBots || !(payload.event || payload).bot_id) {
+      // Load Auth And Trigger Events
+      this.store.get(id).then(this.notify.bind(this, payload));
+    }
   }
 
 
