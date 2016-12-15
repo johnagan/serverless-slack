@@ -38,15 +38,12 @@ class Client {
    * @return {String} the payload's channel
    */
   get channel() {
-    if (this.auth.incoming_webhook) {
-      return this.auth.incoming_webhook.channel_id;
-    } else {
-      let payload = this.payload, event = payload.event
-      if (payload.channel_id) return payload.channel_id;
-      else if (payload.channel) return payload.channel.id;
-      else if (event && event.channel) return event.channel;
-      else if (event && event.item) return event.item.channel;
-    }
+    let payload = this.payload, event = payload.event, auth = this.auth;
+    if (payload.channel_id) return payload.channel_id;
+    else if (payload.channel) return payload.channel.id;
+    else if (event && event.channel) return event.channel;
+    else if (event && event.item) return event.item.channel;
+    else if (auth.incoming_webhook) return auth.incoming_webhook.channel_id;
   }
 
 
