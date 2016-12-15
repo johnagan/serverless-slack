@@ -43,7 +43,6 @@ class Client {
     else if (payload.channel) return payload.channel.id;
     else if (event && event.channel) return event.channel;
     else if (event && event.item) return event.item.channel;
-    else if (auth.incoming_webhook) return auth.incoming_webhook.channel_id;
   }
 
 
@@ -73,9 +72,13 @@ class Client {
     // slash commands and interactive messages
     } else if (this.response_url) {
       if (!ephemeral) message.response_type = 'in_channel';
-      return this.send(this.response_url, message);    
+      return this.send(this.response_url, message);
     
-    // fallback when not ephemeral
+    // incoming webhooks
+    } else if (this.auth.incoming_webhook && !this.channel && !message.channel) {
+      return this.send(this.auth.incoming_webhook.url, message);
+    
+    // fallback
     } else {
       return this.say(message);
     }
