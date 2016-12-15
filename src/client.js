@@ -38,7 +38,8 @@ class Client {
    * @return {String} the payload's channel
    */
   get channel() {
-    let payload = this.payload, event = payload.event;
+    let payload = this.payload;
+    let event = payload.event;
     if (payload) {
       if (payload.channel_id) return payload.channel_id;
       else if (payload.channel) return payload.channel.id;
@@ -54,7 +55,8 @@ class Client {
    * @return {String} the team's API token
    */
   get token() {
-    let auth = this.auth, bot = auth.bot;
+    let auth = this.auth;
+    let bot = auth.bot;
     if (auth) return auth.bot ? auth.bot.bot_access_token : auth.access_token;
   }
 
@@ -67,14 +69,34 @@ class Client {
    * @return {Promise} A promise with the API response
    */
   reply(message, ephemeral) {
+    // invalid ephemeral requests
     if (!this.response_url && ephemeral) {
-      return Promise.reject("Message can't be ephemeral");
+      return Promise.reject("Message can't be private");
+    
+    // slash commands and interactive messages
     } else if (this.response_url) {
       if (!ephemeral) message.response_type = 'in_channel';
       return this.send(this.response_url, message);
+    
+    // incoming webhooks
+    } else if (this.auth.incoming_webhook) {
+      return this.send(this.auth.incoming_webhook.url, message);
+    
+    // fallback when not ephemeral
     } else {
       return this.say(message);
     }
+  }
+
+
+  /**
+   * Send Private Reply
+   *
+   * @param {object} message - The message to reply with
+   * @return {Promise} A promise with the API response
+   */
+  replyPrivate(message) {
+    return this.reply(message, true);
   }
 
 
