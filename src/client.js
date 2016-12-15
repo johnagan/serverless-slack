@@ -73,11 +73,7 @@ class Client {
     // slash commands and interactive messages
     } else if (this.response_url) {
       if (!ephemeral) message.response_type = 'in_channel';
-      return this.send(this.response_url, message);
-    
-    // incoming webhooks
-    } else if (this.auth.incoming_webhook) {
-      return this.send(this.auth.incoming_webhook.url, message);
+      return this.send(this.response_url, message);    
     
     // fallback when not ephemeral
     } else {
