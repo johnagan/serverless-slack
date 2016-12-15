@@ -13,8 +13,8 @@ class Client {
    * @param {object} payload - The message payload to use for context
    */
   constructor(auth, payload) {
-    this.payload = payload;
-    this.auth = auth;
+    this.payload = payload || {};
+    this.auth = auth || {};
 
     this.api = axios.create({
       baseURL: 'https://slack.com/api'
@@ -38,10 +38,10 @@ class Client {
    * @return {String} the payload's channel
    */
   get channel() {
-    let payload = this.payload, event = payload.event, auth = this.auth;
-    if (auth.incoming_webhook) {
-      return auth.incoming_webhook.channel_id;
-    } else if (payload) {
+    if (this.auth.incoming_webhook) {
+      return this.auth.incoming_webhook.channel_id;
+    } else {
+      let payload = this.payload, event = payload.event
       if (payload.channel_id) return payload.channel_id;
       else if (payload.channel) return payload.channel.id;
       else if (event && event.channel) return event.channel;
@@ -56,7 +56,7 @@ class Client {
    * @return {String} the team's API token
    */
   get token() {
-    let auth = this.auth || {}, bot = auth.bot;
+    let auth = this.auth, bot = auth.bot;
     return auth.bot ? auth.bot.bot_access_token : auth.access_token;
   }
 
