@@ -55,7 +55,7 @@ class Slack extends EventEmitter {
 
     if (payload.code) {
       // install app
-      client.install(payload).then(save).catch(fail).then(success);
+      client.install(payload).then(save).then(success).catch(fail);
     } else { 
       // sends a 301 redirect
       callback(client.getAuthUrl(payload));
