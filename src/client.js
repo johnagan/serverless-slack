@@ -39,8 +39,13 @@ class Client {
    */
   get channel() {
     let payload = this.payload, event = payload.event, auth = this.auth;
+    // Slash Commands
     if (payload.channel_id) return payload.channel_id;
+    
+    // Interactive Messages
     else if (payload.channel) return payload.channel.id;
+    
+    // Events API
     else if (event && event.channel) return event.channel;
     else if (event && event.item) return event.item.channel;
   }
