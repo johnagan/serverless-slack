@@ -28,8 +28,7 @@ class Client {
    * @return {String} the payload's response url
    */
   get response_url() {
-    if (this.payload)
-      return this.payload.response_url;
+    if (this.payload) return this.payload.response_url;
   }
 
 
@@ -39,10 +38,12 @@ class Client {
    * @return {String} the payload's channel
    */
   get channel() {
-    if (this.payload) {
-      if (this.payload.channel_id) return this.payload.channel_id;
-      else if (this.payload.channel) return this.payload.channel.id;
-      else if (this.payload.event && this.payload.event.channel) return this.payload.event.channel;
+    let payload = this.payload, event = payload.event;
+    if (payload) {
+      if (payload.channel_id) return payload.channel_id;
+      else if (payload.channel) return payload.channel.id;
+      else if (event && event.channel) return event.channel;
+      else if (event && event.item) return event.item.channel;
     }
   }
 
@@ -53,8 +54,8 @@ class Client {
    * @return {String} the team's API token
    */
   get token() {
-    if (this.auth)
-      return this.auth.bot ? this.auth.bot.bot_access_token : this.auth.access_token;
+    let auth = this.auth, bot = auth.bot;
+    if (auth) return auth.bot ? auth.bot.bot_access_token : auth.access_token;
   }
 
 
@@ -66,13 +67,10 @@ class Client {
    * @return {Promise} A promise with the API response
    */
   reply(message, ephemeral) {
-    if (this.response_url || ephemeral) {
-      if (!this.response_url) 
-        return Promise.reject("Message can't be ephemeral");
-      
-      if (!ephemeral) 
-        message.response_type = 'in_channel';
-      
+    if (!this.response_url && ephemeral) {
+      return Promise.reject("Message can't be ephemeral");
+    } else if (this.response_url) {
+      if (!ephemeral) message.response_type = 'in_channel';
       return this.send(this.response_url, message);
     } else {
       return this.say(message);
@@ -102,11 +100,8 @@ class Client {
     // convert the string message to a message object
     if (typeof(message) === 'string') message = { text: message };
 
-    // set the bot or user token if unset
-    if (!message.token && this.token) message.token = this.token;
-
-    // set the channel if unset
-    if (!message.channel && this.channel) message.channel = this.channel;
+    // set defaults when available
+    message = Object.assign({ token: this.token, channel: this.channel }, message);
 
     // convert json except when passing in a url
     if (!endPoint.match(/^http/i)) message = qs.stringify(message);
