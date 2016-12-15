@@ -38,9 +38,10 @@ class Client {
    * @return {String} the payload's channel
    */
   get channel() {
-    let payload = this.payload;
-    let event = payload.event;
-    if (payload) {
+    let payload = this.payload, event = payload.event, auth = this.auth;
+    if (auth.incoming_webhook) {
+      return auth.incoming_webhook.channel_id;
+    } else if (payload) {
       if (payload.channel_id) return payload.channel_id;
       else if (payload.channel) return payload.channel.id;
       else if (event && event.channel) return event.channel;
@@ -55,9 +56,8 @@ class Client {
    * @return {String} the team's API token
    */
   get token() {
-    let auth = this.auth;
-    let bot = auth.bot;
-    if (auth) return auth.bot ? auth.bot.bot_access_token : auth.access_token;
+    let auth = this.auth || {}, bot = auth.bot;
+    return auth.bot ? auth.bot.bot_access_token : auth.access_token;
   }
 
 
