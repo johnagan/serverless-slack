@@ -19,9 +19,6 @@ slack.on('slash_command', (payload, bot) => { });
 // handle the outgoing webhooks trigger word "googlebot"
 slack.on('googlebot', (payload, bot) => { });
 
-// handle multiple events
-slack.on('googlebot', '/test', 'slash_command', (payload, bot) => { });
-
 // wildcard support
 slack.on('*', (payload, bot) => { });
 ```
