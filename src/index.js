@@ -36,7 +36,6 @@ class Slack extends EventEmitter {
    * @param {Object} response A response object or string
    */
   callback(callback, response) {
-    delete this.callback;
     callback(null, JSON.stringify(response));
   }
 
@@ -136,10 +135,6 @@ class Slack extends EventEmitter {
 
     // trigger all events
     events.forEach(name => this.emit(name, payload, bot, this.store));
-        
-    // Send success signal if callback not used in handler
-    if ( this.callback )
-      this.callback();
   }
 
 }
