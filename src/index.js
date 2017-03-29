@@ -30,12 +30,14 @@ class Slack extends EventEmitter {
 
 
   /**
-   * Allow event handlers to use the callback early, auto destructs
+   * Allow event handlers to use the callback early
+   * Auto destructs to prevent rebinding
    *
    * @param {Function} callback The Lambda callback function
    * @param {Object} response A response object or string
    */
   callback(callback, response) {
+    delete this.callback;
     callback(null, JSON.stringify(response));
   }
 
