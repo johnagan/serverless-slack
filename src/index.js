@@ -20,11 +20,24 @@ class Slack extends EventEmitter {
    * @param {Object} context - The Lambda context
    * @param {Function} callback - The Lambda callback
    */
-  handler(event, context, callback) {     
+  handler(event, context, callback) {
+    this.callback = this.callback.bind(callback);
     switch(event.method) {
       case "GET": this.oauth(event, context, callback); break;
       case "POST": this.event(event, context, callback); break;
     }
+  }
+
+
+  /**
+   * Allow event handlers to use the callback early, auto destructs
+   *
+   * @param {Function} callback The Lambda callback function
+   * @param {Object} response A response object or string
+   */
+  callback(callback, response) {
+    delete this.callback;
+    callback(null, JSON.stringify(response));
   }
 
 
@@ -88,8 +101,6 @@ class Slack extends EventEmitter {
     // Events API challenge
     if (payload.challenge)
       return callback(null, payload.challenge);
-    else
-      callback();
 
     // Ignore Bot Messages
     if (!this.ignoreBots || !(payload.event || payload).bot_id) {
@@ -125,6 +136,10 @@ class Slack extends EventEmitter {
 
     // trigger all events
     events.forEach(name => this.emit(name, payload, bot, this.store));
+        
+    // Send success signal if callback not used in handler
+    if ( this.callback )
+      this.callback();
   }
 
 }
