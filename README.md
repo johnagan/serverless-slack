@@ -106,3 +106,11 @@ slack.send('chat.postMessage', message).then(data => {
 // respond to webhooks
 slack.send('https://hooks.slack.com/services/T0000/B000/XXXX', message);
 ```
+You can also respond to events directly without an API call using the callback method. This is useful if you need the `in_channel` response type to show the users slash command too.
+```js
+// Example for a command that takes a name eg: /greet Bob
+slack.on('/greet', msg => slack.callback({ 
+  response_type: 'in_channel', 
+  text: `Hey there ${msg.text}!`
+}))
+```
