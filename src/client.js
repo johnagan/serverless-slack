@@ -1,7 +1,7 @@
 'use strict';
 
 const axios = require('axios'),
-      qs = require('querystring');
+      qs = require('qs');
 
 
 class Client {
