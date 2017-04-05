@@ -1,7 +1,7 @@
 'use strict';
 
 const axios = require('axios'),
-      qs = require('qs');
+      qs = require('querystring');
 
 
 class Client {
@@ -127,7 +127,11 @@ class Client {
     message = Object.assign({ token: this.token, channel: this.channel }, message);
 
     // convert json except when passing in a url
-    if (!endPoint.match(/^http/i)) message = qs.stringify(message);
+    if (!endPoint.match(/^http/i)) {
+      message = Object.keys(message)
+        .map(key => `${key}=${qs.escape(JSON.stringify(message[key]).replace(/^["'](.*)["']$/, '$1'))}`)
+        .join('&');
+    }
     return this.api.post(endPoint, message).then(this.getData);
   }
 
