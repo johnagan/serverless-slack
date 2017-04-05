@@ -128,9 +128,9 @@ class Client {
 
     // convert json except when passing in a url
     if (!endPoint.match(/^http/i)) {
-      message = Object.keys(message)
-        .map(key => `${key}=${qs.escape(JSON.stringify(message[key]).replace(/^["'](.*)["']$/, '$1'))}`)
-        .join('&');
+      if (message.attachments)
+        message.attachments = JSON.stringify(message.attachments).replace(/^'(.*)'$/, '$1')
+      message = qs.stringify(message);
     }
     return this.api.post(endPoint, message).then(this.getData);
   }
