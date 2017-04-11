@@ -21,7 +21,7 @@ class Slack extends EventEmitter {
    * @param {Function} callback - The Lambda callback
    */
   handler(event, context, callback) {
-    this.callback = this.callback.bind(callback);
+    this.callbackFn = callback;
     switch(event.method) {
       case "GET": this.oauth(event, context, callback); break;
       case "POST": this.event(event, context, callback); break;
@@ -31,14 +31,11 @@ class Slack extends EventEmitter {
 
   /**
    * Allow event handlers to use the callback early
-   * Auto destructs to prevent rebinding
    *
-   * @param {Function} callback The Lambda callback function
    * @param {Object} response A response object or string
    */
-  callback(callback, response) {
-    delete this.callback;
-    callback(null, JSON.stringify(response));
+  callback(response) {
+    if (this.callbackFn) this.callbackFn(null, JSON.stringify(response));
   }
 
 
