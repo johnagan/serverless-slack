@@ -24,7 +24,7 @@ slack.on('*', (payload, bot) => { });
 ```
 Event | Description
 :---|:---
-* | All events
+\* | All events
 **message** | All RTM events
 **slash_command** | All Slash Commands
 **event** | All Event API callbacks
