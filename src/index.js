@@ -121,7 +121,7 @@ class Slack extends EventEmitter {
     if (payload.trigger_word) events.push('webhook', payload.trigger_word);
 
     // notify message button triggered by callback_id
-    if (payload.callback_id) events.push('interactive_message', payload.callback_id);
+    if (payload.callback_id) events.push(payload.callback_id);
 
     // trigger all events
     events.forEach(name => this.emit(name, payload, bot, this.store));
