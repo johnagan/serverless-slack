@@ -24,7 +24,7 @@ class Client {
 
   /**
    * Response Url
-   * 
+   *
    * @return {String} the payload's response url
    */
   get response_url() {
@@ -41,10 +41,10 @@ class Client {
     let payload = this.payload, event = payload.event, auth = this.auth;
     // Slash Commands
     if (payload.channel_id) return payload.channel_id;
-    
+
     // Interactive Messages
     else if (payload.channel) return payload.channel.id;
-    
+
     // Events API
     else if (event && event.channel) return event.channel;
     else if (event && event.item) return event.item.channel;
@@ -53,7 +53,7 @@ class Client {
 
   /**
    * API Token
-   * 
+   *
    * @return {String} the team's API token
    */
   get token() {
@@ -73,16 +73,16 @@ class Client {
     // invalid ephemeral requests
     if (!this.response_url && ephemeral) {
       return Promise.reject("Message can't be private");
-    
+
     // slash commands and interactive messages
     } else if (this.response_url) {
       if (!ephemeral) message.response_type = 'in_channel';
       return this.send(this.response_url, message);
-    
+
     // incoming webhooks
     } else if (this.auth.incoming_webhook && !this.channel && !message.channel) {
       return this.send(this.auth.incoming_webhook.url, message);
-    
+
     // fallback
     } else {
       return this.say(message);
@@ -124,7 +124,7 @@ class Client {
     if (typeof(message) === 'string') message = { text: message };
 
     // set defaults when available
-    message = Object.assign({ token: this.token, channel: this.channel }, message);
+    message = Object.assign({ token: this.token }, message);
 
     // convert json except when passing in a url
     if (!endPoint.match(/^http/i)) message = qs.stringify(message);
@@ -153,7 +153,7 @@ class Client {
 
   /**
    * OAuth Authorization Url
-   * 
+   *
    * @param {object} args - Arguments for the url
    * @return {String} The payload's response url
    */
@@ -170,23 +170,23 @@ class Client {
 
   /**
    * OAuth Access
-   * 
+   *
    * @param {object} args - Arguments for oauth access
    * @return {Promise} A promise with the API response
    */
   getToken(args) {
-    return this.send('oauth.access', { 
+    return this.send('oauth.access', {
       code: args.code,
-      state: args.state, 
-      client_id: process.env.CLIENT_ID, 
-      client_secret: process.env.CLIENT_SECRET 
+      state: args.state,
+      client_id: process.env.CLIENT_ID,
+      client_secret: process.env.CLIENT_SECRET
     });
   }
 
 
   /**
    * OAuth Test
-   * 
+   *
    * @param {object} auth - The team's access data
    * @return {Promise} A promise with the updated team access data
    */
@@ -200,7 +200,7 @@ class Client {
 
   /**
    * OAuth Install
-   * 
+   *
    * @param {object} payload - The install request
    * @return {Promise} A promise with the team access data
    */
