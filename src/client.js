@@ -128,7 +128,8 @@ class Client {
 
     // convert json except when passing in a url
     if (!endPoint.match(/^http/i)) message = qs.stringify(message);
-    return this.api.post(endPoint, message).then(this.getData);
+    // this is to cater for the fact that it will throw an oauth error -since we installed directly on Slack management console
+    return this.api.post(endPoint, message).then(this.getData).catch(error => { console.log(error) });
   }
 
 
