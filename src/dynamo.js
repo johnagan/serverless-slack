@@ -37,7 +37,7 @@ exports.get = function(id) {
  * @return {Promise} A Promise with the get result
  */
 exports.query = function(method, params) {
-  params.TableName = process.env.TABLE_NAME;
+  params.TableName = process.env.TABLE_NAME || 'serverless-slack-oauth-table';
 
   return new Promise((resolve, reject) => {
     dynamo[method](params, (err, data) => {
