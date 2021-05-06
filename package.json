@@ -1,7 +1,7 @@
 {
   "name": "serverless-slack",
   "description": "A Slack App Framework for AWS Lambda / Serverless.js",
-  "version": "1.0.26",
+  "version": "1.0.27",
   "main": "src/index.js",
   "author": "John Agan <john@slack-corp.com>",
   "homepage": "https://github.com/johnagan/serverless-slack",
