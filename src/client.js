@@ -127,7 +127,12 @@ class Client {
     message = Object.assign({ token: this.token, channel: this.channel }, message);
 
     // convert json except when passing in a url
-    if (!endPoint.match(/^http/i)) message = qs.stringify(message);
+    if (!endPoint.match(/^http/i)) {
+      if (message.attachments) {
+        message.attachments = JSON.stringify(message.attachments).replace(/^'(.*)'$/, '$1');
+      }
+      message = qs.stringify(message);
+    }
     return this.api.post(endPoint, message).then(this.getData);
   }
 
