@@ -127,6 +127,12 @@ class Slack extends EventEmitter {
     events.forEach(name => this.emit(name, payload, bot, this.store));
   }
 
+  /**
+   * Create new slack client to be used with customBot
+  */
+  client() {
+    return new Client({}, {});
+  }  
 }
 
 module.exports = new Slack();
